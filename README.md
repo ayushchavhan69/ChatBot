@@ -74,6 +74,12 @@ tools\w64devkit\bin\g++.exe -std=c++17 -O2 -Ibackend/include backend/src/*.cpp -
 
 ## 🌐 REST API Endpoints
 
+### Netlify hosting
+
+`netlify.toml` publishes `stitch_ui_ux_design_replica` and serves `code.html` at `/`, with `app.js` and the other static assets available alongside it. No frontend build step is required.
+
+Netlify serves the static interface only. The native C++ server must run separately to provide the `/api/*` endpoints; publishing the interface does not start that server.
+
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/` | Serves the interactive Web UI (`code.html`) |
