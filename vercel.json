@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/stitch_ui_ux_design_replica/code.html" },
+    { "source": "/app.js", "destination": "/stitch_ui_ux_design_replica/app.js" },
+    { "source": "/screen.png", "destination": "/stitch_ui_ux_design_replica/screen.png" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    }
+  ]
+}
