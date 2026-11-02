@@ -1,5 +1,42 @@
 [
   {
+    "id": "sess_1793611969242_546545",
+    "messages": [
+      {
+        "content": "I need some UI inspiration for dark mobile dashboard",
+        "id": "usr_1793611969244_403128",
+        "sender": "user",
+        "timestamp": "2026-11-02T15:02:49Z",
+        "type": "text"
+      },
+      {
+        "content": "For modern dark mode mobile UIs, here is a recommended aesthetic framework:\n\n- **Base Canvas:** Deep obsidian `#08080A` or tinted gunmetal `#121316`.\n- **High-Energy Accents:** Electric Chartreuse `#D8FE43` for primary CTAs and active microphone indicators.\n- **Secondary Soft Tones:** Pastel lavender `#C5B4FA` and warm peach `#FECDD3` to soften card interactions.\n- **Glassmorphism:** Inner shadows with 30px blurs and subtle white rim highlights for cards.\n- **Vector Touches:** Delicate 0.8px topographic contour lines with 15-25% opacity in header corners.\n\nThis creates a futuristic yet welcoming companion experience!",
+        "id": "bot_1793611985272_866161",
+        "sender": "bot",
+        "timestamp": "2026-11-02T15:03:05Z",
+        "type": "text"
+      }
+    ],
+    "timestamp": "2026-11-02T15:03:05Z",
+    "title": "Chat with Bot",
+    "type": "chat"
+  },
+  {
+    "id": "sess_1793611969242_546545",
+    "messages": [
+      {
+        "content": "I need some UI inspiration for dark mobile dashboard",
+        "id": "usr_1793611969244_403128",
+        "sender": "user",
+        "timestamp": "2026-11-02T15:02:49Z",
+        "type": "text"
+      }
+    ],
+    "timestamp": "2026-11-02T15:02:49Z",
+    "title": "Chat with Bot",
+    "type": "chat"
+  },
+  {
     "id": "sess_1793604276632_527201",
     "messages": [
       {

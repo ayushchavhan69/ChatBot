@@ -1,7 +1,44 @@
 [build]
   publish = "stitch_ui_ux_design_replica"
+  functions = "netlify/functions"
 
 [[redirects]]
-  from = "/"
+  from = "/api/chat"
+  to = "/.netlify/functions/chat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/image/analyze"
+  to = "/.netlify/functions/image-analyze"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/status"
+  to = "/.netlify/functions/status"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/history/clear"
+  to = "/.netlify/functions/history"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/history"
+  to = "/.netlify/functions/history"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/user"
+  to = "/.netlify/functions/user"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/*"
   to = "/code.html"
   status = 200

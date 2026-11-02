@@ -20,4 +20,3 @@ add_executable(server ${SOURCES})
 if (WIN32)
     target_link_libraries(server ws2_32 crypt32 winhttp)
 endif()
-

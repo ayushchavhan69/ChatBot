@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Buddy - Assistant Mobile App</title>
+<!-- Tailwind CSS CDN with forms and container queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              lime: '#D8FE43',
+              limeHover: '#c5ec38',
+              lavender: '#C4B5FD',
+              lavenderLight: '#DDD6FE',
+              peach: '#FECDD3',
+              darkBg: '#090A0D',
+              cardDark: '#16171B',
+              itemDark: '#121316',
+            }
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Text', 'Inter', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Style - Custom Effects & Orb Rendering -->
+<style data-purpose="custom-decorations">
+    /* Subtle background grid / contour effect lines */
+    .contour-lines {
+      background-image: radial-gradient(ellipse 70% 40% at 85% 15%, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    }
+
+    /* 3D Liquid Orb Hologram Simulation */
+    .iridescent-orb {
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, rgba(255, 255, 255, 0.8) 8%, rgba(138, 180, 248, 0.6) 22%, rgba(192, 132, 252, 0.75) 45%, rgba(30, 27, 75, 0.95) 75%, #050608 100%);
+      box-shadow: 
+        inset 0 0 50px 10px rgba(59, 130, 246, 0.5),
+        inset 20px -20px 40px 15px rgba(236, 72, 153, 0.4),
+        inset -20px 20px 40px 15px rgba(34, 211, 238, 0.5),
+        0 0 60px 12px rgba(99, 102, 241, 0.35),
+        0 0 90px 25px rgba(168, 85, 247, 0.2);
+      border-radius: 46% 54% 49% 51% / 52% 47% 53% 48%;
+      animation: morphBlob 10s ease-in-out infinite alternate;
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+
+    @keyframes morphBlob {
+      0% {
+        border-radius: 46% 54% 49% 51% / 52% 47% 53% 48%;
+        transform: rotate(0deg) scale(1);
+      }
+      50% {
+        border-radius: 54% 46% 62% 38% / 43% 58% 42% 57%;
+        transform: rotate(180deg) scale(1.02);
+      }
+      100% {
+        border-radius: 49% 51% 40% 60% / 57% 43% 57% 43%;
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    /* Concentric Pulse Rings for Mic */
+    .concentric-ring-1 {
+      box-shadow: 0 0 0 10px rgba(216, 254, 67, 0.08), 0 0 0 20px rgba(216, 254, 67, 0.03);
+    }
+  </style>
+<!-- END: Style - Custom Effects & Orb Rendering -->
+<script src="app.js" defer></script>
+</head>
+<body class="bg-gradient-to-b from-[#C8F53B] via-[#E2F78A] to-[#F7C6B7] min-h-screen p-4 sm:p-8 flex flex-col items-center justify-center font-sans antialiased">
+
+<!-- BEGIN: MainContainer -->
+<main class="w-full flex items-center justify-center relative" data-purpose="app-showcase-wrapper">
+
+<!-- ======================================================== -->
+<!-- Main Dashboard / Assistant Home Screen                   -->
+<!-- ======================================================== -->
+<!-- BEGIN: ScreenDashboard -->
+<section id="screen-dashboard" class="w-full max-w-[375px] h-[780px] bg-[#08080A] rounded-[44px] p-6 flex flex-col justify-between relative overflow-hidden shadow-2xl border-4 border-[#1f2228] select-none transition-all duration-300" data-purpose="dashboard-screen">
+<!-- Topographic Contour Wave Graphic in Top Right -->
+<svg class="absolute top-0 right-0 w-72 h-72 opacity-25 pointer-events-none transform translate-x-8 -translate-y-4" fill="none" stroke="white" stroke-width="0.8" viewbox="0 0 260 260">
+<path d="M20 120 Q 90 20 180 80 T 260 140"></path>
+<path d="M10 140 Q 80 40 170 100 T 250 160"></path>
+<path d="M0 160 Q 70 60 160 120 T 240 180"></path>
+<path d="M30 100 Q 100 0 190 60 T 270 120"></path>
+<path d="M40 80 Q 110 -20 200 40 T 280 100"></path>
+<path d="M50 60 Q 120 -40 210 20 T 290 80"></path>
+</svg>
+<!-- Dashboard Top Header -->
+<header class="w-full flex items-center justify-end pt-2 z-10" data-purpose="dashboard-header">
+<!-- Status Pill -->
+<div class="flex items-center gap-2 px-3 py-1.5 bg-[#181A20] rounded-full border border-gray-800/80 shadow-sm">
+  <span id="online-status-indicator" class="w-2 h-2 rounded-full bg-[#D8FE43] animate-pulse"></span>
+  <span id="online-status-text" class="text-[11px] font-medium text-gray-300">Online</span>
+</div>
+</header>
+<!-- Main Welcome Heading -->
+<div class="mt-4 mb-2 z-10" data-purpose="greeting-section">
+<h1 class="text-3xl font-light text-white tracking-tight leading-snug">
+          How may I help<br/>you today?
+        </h1>
+</div>
+<!-- Action Cards 2-Column Grid -->
+<div class="grid grid-cols-2 gap-3.5 my-3 z-10" data-purpose="bot-actions-grid">
+<!-- Left Card: Chat with Bot -->
+<article onclick="openChatModal()" class="bg-[#D8FE43] hover:bg-[#cbf13b] text-black rounded-3xl p-4 flex flex-col justify-between h-48 cursor-pointer transition-transform hover:-translate-y-0.5 duration-200 shadow-lg">
+<!-- Top Row: Icon and Arrow -->
+<div class="flex items-center justify-between">
+<span class="w-9 h-9 rounded-full bg-black/10 flex items-center justify-center">
+<!-- Chat bubbles icon -->
+<svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<!-- Diagonal Arrow ↗ -->
+<svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M7 17L17 7H9M17 7V15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<!-- Label -->
+<div>
+<h2 class="text-xl font-bold tracking-tight leading-tight">Chat<br/>with Bot</h2>
+<p class="text-[11px] text-black/70 mt-1 font-medium">Ask questions &amp; brainstorm</p>
+</div>
+</article>
+
+<!-- Right Card: Search by Image -->
+<article onclick="openImageModal()" class="bg-[#FECDD3] hover:bg-[#fda4af] text-black rounded-3xl p-4 flex flex-col justify-between h-48 cursor-pointer transition-transform hover:-translate-y-0.5 duration-200 shadow-lg">
+<!-- Top Row: Icon and Arrow -->
+<div class="flex items-center justify-between">
+<span class="w-9 h-9 rounded-full bg-black/10 flex items-center justify-center">
+<!-- Gallery Image Icon -->
+<svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect>
+<circle cx="8.5" cy="8.5" r="1.5"></circle>
+<polyline points="21 15 16 10 5 21"></polyline>
+</svg>
+</span>
+<!-- Diagonal Arrow ↗ -->
+<svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M7 17L17 7H9M17 7V15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<!-- Label -->
+<div>
+<h2 class="text-xl font-bold tracking-tight leading-tight">Search<br/>by Image</h2>
+<p class="text-[11px] text-black/70 mt-1 font-medium">Solve &amp; answer visual queries</p>
+</div>
+</article>
+</div>
+<!-- Recent History Section -->
+<section class="mt-2 mb-1 z-10" data-purpose="recent-history-section">
+<!-- Section Header -->
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-sm font-semibold text-white tracking-wide">History</h2>
+<a class="text-xs text-gray-400 hover:text-white transition-colors" href="#see-all">See all</a>
+</div>
+<!-- History Item List (Populated dynamically by app.js from C++ backend) -->
+<div id="history-items-container" class="flex flex-col gap-2.5">
+<!-- Placeholder while fetching -->
+<div class="text-xs text-gray-500 py-3 text-center">Loading conversation history...</div>
+</div>
+</section>
+<!-- Bottom Spacer / iOS Home Indicator -->
+<div class="w-full flex justify-center pt-2">
+<div class="w-32 h-1 bg-neutral-800 rounded-full"></div>
+</div>
+</section>
+<!-- END: ScreenDashboard -->
+
+<!-- ======================================================== -->
+<!-- MODAL: Full Interactive Chat Drawer                       -->
+<!-- ======================================================== -->
+<div id="chat-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 items-center justify-center p-4">
+  <div class="w-full max-w-[420px] h-[680px] bg-[#0E0F13] border border-gray-800 rounded-[32px] p-5 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-3 border-b border-gray-800/80">
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-full bg-[#D8FE43] flex items-center justify-center text-black font-bold text-xs">AI</span>
+        <div>
+          <h3 class="text-sm font-bold text-white leading-tight">AI Buddy Chat</h3>
+          <span class="text-[10px] text-lime-400">C++ Native Core • Online</span>
+        </div>
+      </div>
+      <button onclick="closeChatModal()" class="w-8 h-8 rounded-full bg-[#1A1C22] hover:bg-[#282B34] text-gray-400 hover:text-white flex items-center justify-center text-sm transition-colors">✕</button>
+    </div>
+
+    <!-- Messages Container -->
+    <div id="chat-messages-container" class="flex-1 overflow-y-auto py-4 px-1 space-y-2 select-text">
+      <div class="flex flex-col items-start mb-3">
+        <div class="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-2.5 text-xs sm:text-sm bg-[#181A20] text-gray-200 border border-gray-800">
+          Hi! I am your AI Buddy. How can I help you design, engineer, or brainstorm today?
+        </div>
+        <span class="text-[10px] text-gray-500 mt-1 px-1">Just now</span>
+        <div class="flex flex-wrap gap-1.5 mt-2">
+          <button onclick="sendQuickPrompt('Help me brainstorm creative project ideas')" class="text-[11px] bg-[#22242b] hover:bg-[#2c2f38] text-gray-300 px-2.5 py-1 rounded-full border border-gray-700/60 transition-colors">Brainstorm Ideas</button>
+          <button onclick="sendQuickPrompt('I need some UI inspiration for dark mobile dashboard')" class="text-[11px] bg-[#22242b] hover:bg-[#2c2f38] text-gray-300 px-2.5 py-1 rounded-full border border-gray-700/60 transition-colors">Dark mode inspiration</button>
+          <button onclick="sendQuickPrompt('Explain how this C++ backend works')" class="text-[11px] bg-[#22242b] hover:bg-[#2c2f38] text-gray-300 px-2.5 py-1 rounded-full border border-gray-700/60 transition-colors">C++ Backend Arch</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Bar -->
+    <div class="pt-2 border-t border-gray-800/80">
+      <form onsubmit="event.preventDefault(); sendChatMessage();" class="flex items-center gap-2">
+        <input id="chat-input-field" type="text" placeholder="Type a message or design question..." autocomplete="off" class="flex-1 bg-[#181A20] border border-gray-700/60 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#D8FE43] transition-colors" />
+        <button type="submit" class="w-11 h-11 rounded-2xl bg-[#D8FE43] hover:bg-[#cbf13b] text-black flex items-center justify-center font-bold transition-transform active:scale-95 flex-shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: Multimodal Image Search & Critique                 -->
+<!-- ======================================================== -->
+<div id="image-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-50 items-center justify-center p-4">
+  <div class="w-full max-w-[460px] max-h-[92vh] bg-[#0E0F13] border border-gray-800 rounded-[32px] p-5 flex flex-col shadow-2xl relative overflow-y-auto">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between pb-3 border-b border-gray-800/80">
+      <div class="flex items-center gap-2.5">
+        <span class="w-8 h-8 rounded-full bg-[#FECDD3] flex items-center justify-center text-black font-bold text-xs shadow-md">📷</span>
+        <div>
+          <h3 class="text-sm font-bold text-white leading-tight">Search by Image & Question Solver</h3>
+          <p class="text-[10px] text-gray-400">Reads text & answers questions inside images • Gemini Vision</p>
+        </div>
+      </div>
+      <button onclick="closeImageModal()" class="w-8 h-8 rounded-full bg-[#1A1C22] hover:bg-[#282B34] text-gray-400 hover:text-white flex items-center justify-center text-sm transition-colors">✕</button>
+    </div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="image-file-input" accept="image/*" class="hidden" onchange="handleImageFileSelect(event)">
+
+    <!-- Upload Dropzone / Preview Area -->
+    <div id="image-dropzone" 
+         onclick="triggerImageUpload()" 
+         ondragover="handleImageDragOver(event)" 
+         ondragleave="handleImageDragLeave(event)" 
+         ondrop="handleImageDrop(event)"
+         class="mt-4 p-4 border-2 border-dashed border-gray-700 hover:border-[#FECDD3] rounded-2xl text-center bg-[#131418] cursor-pointer transition-all duration-200">
+      
+      <!-- State 1: No Image Selected -->
+      <div id="image-upload-prompt" class="flex flex-col items-center justify-center py-2">
+        <div class="w-12 h-12 mx-auto rounded-full bg-[#FECDD3]/20 text-[#FECDD3] flex items-center justify-center mb-2 shadow-inner">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        </div>
+        <p class="text-xs text-white font-medium">Click to upload or drag & drop an image</p>
+        <p class="text-[11px] text-gray-400 mt-0.5">Upload any question, homework, code screenshot, or diagram</p>
+        
+        <div class="flex items-center gap-2 mt-3" onclick="event.stopPropagation()">
+          <button type="button" onclick="triggerImageUpload()" class="px-3 py-1.5 bg-[#1F222B] hover:bg-[#2b2f3a] text-gray-200 text-[11px] font-semibold rounded-lg border border-gray-700 flex items-center gap-1.5 transition-colors">
+            📁 Browse File
+          </button>
+          <button type="button" onclick="useCurrentSnapshot()" class="px-3 py-1.5 bg-[#FECDD3]/15 hover:bg-[#FECDD3]/25 text-[#FECDD3] text-[11px] font-semibold rounded-lg border border-[#FECDD3]/30 flex items-center gap-1.5 transition-colors">
+            📱 Use App Snapshot
+          </button>
+        </div>
+      </div>
+
+      <!-- State 2: Image Preview (Initially Hidden) -->
+      <div id="image-preview-container" class="hidden flex flex-col items-center">
+        <div class="relative w-full rounded-xl overflow-hidden bg-black/60 border border-gray-800 max-h-52 flex items-center justify-center">
+          <img id="image-upload-preview" src="" alt="Selected Preview" class="max-h-52 w-auto object-contain rounded-xl">
+          <button type="button" onclick="removeSelectedImage(event)" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/80 hover:bg-black text-gray-300 hover:text-white flex items-center justify-center text-xs transition-colors shadow-lg border border-gray-700">✕</button>
+        </div>
+        <div class="w-full flex items-center justify-between mt-2 px-1 text-[11px] text-gray-400">
+          <span id="image-file-info" class="truncate font-mono">image.png</span>
+          <button type="button" onclick="triggerImageUpload(); event.stopPropagation();" class="text-[#FECDD3] hover:underline font-medium">Change image</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional Custom Prompt & Quick Filters -->
+    <div class="mt-3">
+      <label class="block text-[11px] font-medium text-gray-300 mb-1">Your Question or Focus (Optional):</label>
+      <div class="relative">
+        <input id="image-prompt-input" type="text" placeholder="Leave blank to automatically answer the question in the image..." 
+               class="w-full bg-[#131418] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#FECDD3] transition-colors">
+      </div>
+      <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+        <span class="text-[10px] text-gray-500">Quick focus:</span>
+        <button type="button" onclick="setImagePromptPreset('Read the question or problem in this image and provide the full, accurate, and detailed answer.')" class="px-2 py-0.5 bg-[#171920] hover:bg-[#222530] text-[#FECDD3] rounded-md text-[10px] border border-[#FECDD3]/30 transition-colors">📝 Answer Question</button>
+        <button type="button" onclick="setImagePromptPreset('Transcribe and extract all text from this image exactly as written.')" class="px-2 py-0.5 bg-[#171920] hover:bg-[#222530] text-gray-300 rounded-md text-[10px] border border-gray-800 transition-colors">📖 Extract Text (OCR)</button>
+        <button type="button" onclick="setImagePromptPreset('Explain the concept, architecture, code, or diagram in this image in detail.')" class="px-2 py-0.5 bg-[#171920] hover:bg-[#222530] text-gray-300 rounded-md text-[10px] border border-gray-800 transition-colors">💡 Explain Concept</button>
+        <button type="button" onclick="setImagePromptPreset('Critique the visual hierarchy, layout, color palette, and ergonomics of this UI design.')" class="px-2 py-0.5 bg-[#171920] hover:bg-[#222530] text-gray-300 rounded-md text-[10px] border border-gray-800 transition-colors">🎨 UI Critique</button>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <div class="mt-4">
+      <button id="btn-run-image-analysis" onclick="analyzeSelectedImage()" class="w-full py-2.5 bg-[#FECDD3] hover:bg-[#fda4af] text-black font-bold text-xs rounded-xl transition-all shadow-lg shadow-[#FECDD3]/10 flex items-center justify-center gap-2">
+        <span>⚡ Solve & Answer Question from Image 🚀</span>
+      </button>
+    </div>
+
+    <!-- Result Container -->
+    <div id="image-analysis-result" class="mt-4"></div>
+  </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- MODAL: Full History Viewer                                -->
+<!-- ======================================================== -->
+<div id="history-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 items-center justify-center p-4">
+  <div class="w-full max-w-[420px] max-h-[85vh] bg-[#0E0F13] border border-gray-800 rounded-[32px] p-5 flex flex-col justify-between shadow-2xl relative overflow-hidden">
+    <div class="flex items-center justify-between pb-3 border-b border-gray-800/80">
+      <h3 class="text-sm font-bold text-white">All Conversations</h3>
+      <div class="flex items-center gap-2">
+        <button onclick="clearAllHistory()" class="text-xs text-red-400 hover:text-red-300 px-2 py-1 bg-red-950/40 rounded-lg border border-red-900/50">Clear All</button>
+        <button onclick="closeSeeAllModal()" class="w-7 h-7 rounded-full bg-[#1A1C22] text-gray-400 hover:text-white flex items-center justify-center text-xs">✕</button>
+      </div>
+    </div>
+    <div id="all-history-list" class="flex-1 overflow-y-auto py-3 space-y-2 mt-2">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+</main>
+<!-- END: MainContainer -->
+</body></html>
