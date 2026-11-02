@@ -1,0 +1,15 @@
+{
+  "name": "stitch_ui_ux_design_replica",
+  "version": "1.0.0",
+  "description": "AI Buddy - Interactive Assistant Mobile App UI",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["ai", "chatbot", "assistant", "ui"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
