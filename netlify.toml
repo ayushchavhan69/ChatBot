@@ -1,0 +1,7 @@
+[build]
+  publish = "stitch_ui_ux_design_replica"
+
+[[redirects]]
+  from = "/"
+  to = "/code.html"
+  status = 200
