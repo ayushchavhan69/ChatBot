@@ -24,7 +24,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const body = req.body || {};
+    let body = req.body || {};
+    if (typeof body === "string") {
+      try {
+        body = JSON.parse(body);
+      } catch (e) {
+        body = {};
+      }
+    }
     const rawPrompt = (body.prompt || "").trim();
     const rawImage = (body.image || "").trim();
     const sessionId = body.sessionId || ("sess_img_" + Date.now());

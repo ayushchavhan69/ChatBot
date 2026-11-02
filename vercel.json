@@ -1,9 +1,9 @@
 {
   "rewrites": [
     { "source": "/api/chat", "destination": "/api/chat" },
-    { "source": "/api/image/analyze", "destination": "/api/image-analyze" },
+    { "source": "/api/image/analyze", "destination": "/api/image/analyze" },
     { "source": "/api/status", "destination": "/api/status" },
-    { "source": "/api/history/clear", "destination": "/api/history" },
+    { "source": "/api/history/clear", "destination": "/api/history/clear" },
     { "source": "/api/history", "destination": "/api/history" },
     { "source": "/api/user", "destination": "/api/user" },
     { "source": "/", "destination": "/stitch_ui_ux_design_replica/code.html" },
