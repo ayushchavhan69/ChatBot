@@ -14,3 +14,7 @@ bin/
 # Compiler development toolchain
 tools/w64devkit/
 
+# Node.js dependencies
+node_modules/
+package-lock.json
+
